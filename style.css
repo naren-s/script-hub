@@ -1,0 +1,38 @@
+body {
+    font-family: 'Montserrat', sans-serif;
+    background-color: #f8f9fa;
+}
+
+.container {
+    max-width: 600px;
+}
+
+.card {
+    border-radius: 10px;
+    background-color: #ffffff;
+}
+
+.card-title {
+    font-size: 24px;
+    font-weight: 500;
+}
+
+.btn-success {
+    background-color: #28a745;
+    border: none;
+    padding: 10px 20px; /* Increase padding for a larger button */
+    font-size: 16px; /* Adjust font size if needed */
+}
+
+.btn-success:hover {
+    background-color: #218838;
+}
+
+
+.form-control {
+    border-radius: 5px;
+}
+
+.form-group label {
+    font-weight: 500;
+}
