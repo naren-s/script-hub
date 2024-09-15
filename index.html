@@ -3,44 +3,66 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap">
-    <link rel="stylesheet" href="style.css">
-    <title>Document/Script Form</title>
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Montserrat', sans-serif;
+        }
+        .login-container {
+            max-width: 500px;
+            margin: 100px auto;
+            padding: 30px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .login-container h2 {
+            font-weight: 500;
+            margin-bottom: 30px;
+        }
+    </style>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Check if user is already logged in
+            const token = localStorage.getItem('token');
+            if (token) {
+                // Redirect to display if a token is found
+                window.location.href = 'display.html';
+            }
+        });
+
+        // Prevent forward navigation
+        window.history.pushState(null, '', window.location.href);
+        window.addEventListener('popstate', function() {
+            window.history.pushState(null, '', window.location.href);
+        });
+    </script>
 </head>
 <body>
-    <div class="container mt-5">
-        <div class="card shadow-sm">
-            <div class="card-body">
-                <h2 class="card-title text-center mb-4">Document/Script Form</h2>
-                <form id="documentForm">
-                    <div class="form-group">
-                        <label for="title">Document/Script Title</label>
-                        <input type="text" class="form-control" id="title" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="module">Module</label>
-                        <input type="text" class="form-control" id="module" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="approval">Approval Required</label>
-                        <select id="approval" class="form-control" required>
-                            <option value="true">Yes</option>
-                            <option value="false">No</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="scriptLink">Script Link</label>
-                        <input type="url" class="form-control" id="scriptLink" required>
-                    </div>
-                    <div class="d-flex justify-content-center">
-                        <button type="button" class="btn btn-success btn-md" onclick="submitForm()">Submit</button>
-                    </div>
-                </form>
+    <div class="login-container">
+        <h2 class="text-center">Login</h2>
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" class="form-control" id="username" placeholder="Enter your username" required>
             </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" class="form-control" id="password" placeholder="Enter your password" required>
+            </div>
+            <div class="d-flex justify-content-center">
+                <button type="button" class="btn btn-primary btn-md" onclick="login()">Login</button>
+            </div>
+        </form>
+        <div class="text-center mt-3">
+            <a href="signup.html">Don't have an account? Sign up</a>
         </div>
     </div>
-    <script src="script.js"></script>
+
+    <script src="auth.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </body>
 </html>

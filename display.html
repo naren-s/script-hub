@@ -7,6 +7,30 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap">
     <link rel="stylesheet" href="table-styles.css">
     <title>Document/Script List</title>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Check if user is authenticated
+            const token = localStorage.getItem('token');
+            if (!token) {
+                // Redirect to login if no token is found
+                window.location.href = 'index.html';
+            }
+
+            // Prevent back navigation
+            window.history.replaceState(null, '', window.location.href);
+            window.addEventListener('popstate', function() {
+                window.history.replaceState(null, '', window.location.href);
+            });
+        });
+
+        function logout() {
+            // Clear the token from localStorage
+            localStorage.removeItem('token');
+            
+            // Redirect to login page
+            window.location.href = 'index.html'; // or 'login.html' if that's the actual file name
+        }
+    </script>
     <style>
         body {
             font-family: 'Montserrat', sans-serif;
@@ -17,6 +41,11 @@
         .pagination {
             justify-content: center;
         }
+        .action-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
     </style>
 </head>
 <body>
@@ -24,7 +53,13 @@
         <div class="card shadow-sm">
             <div class="card-body">
                 <h2 class="card-title text-center mb-4">Document/Script List</h2>
-                
+
+                <!-- Action Buttons: Submit New Document/Script and Log Out -->
+                <div class="action-buttons">
+                    <a href="form.html" class="btn btn-primary">Submit New Script</a>
+                    <button class="btn btn-danger" onclick="logout()">Log Out</button>
+                </div>
+
                 <!-- Search bar -->
                 <div class="search-bar">
                     <input type="text" id="searchInput" class="form-control" placeholder="Search by title...">
@@ -57,6 +92,7 @@
         </div>
     </div>
     
+    <script src="auth.js"></script>
     <script src="display-script.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </body>

@@ -1,6 +1,7 @@
 document.addEventListener('DOMContentLoaded', function () {
+    // Optionally, check if user is logged in by checking localStorage or similar
+    // Since we're no longer using tokens, you might set a flag or similar mechanism.
     fetchDocumentData();
-    document.getElementById('searchInput').addEventListener('input', handleSearch);
 });
 
 const rowsPerPage = 8;
@@ -10,20 +11,36 @@ let filteredDocuments = []; // This will hold the documents after filtering.
 
 async function fetchDocumentData() {
     try {
-        const response = await fetch('http://localhost:3000/documents');
+        const response = await fetch('http://localhost:3000/documents', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+
+        if (!response.ok) {
+            // Handle non-ok responses
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
         const documents = await response.json();
         allDocuments = documents; // Store the full document list
         filteredDocuments = documents; // Initially, no filtering is applied
         renderTable();
     } catch (error) {
         console.error('Error fetching document data', error);
-        Swal.fire('Error', 'Failed to fetch document data.', 'error');
+        Swal.fire('Error', 'Failed to fetch document data. Please check the console for more details.', 'error');
     }
 }
 
 function renderTable() {
     const tableBody = document.getElementById('dataTableBody');
     tableBody.innerHTML = ''; // Clear existing data
+
+    if (filteredDocuments.length === 0) {
+        tableBody.innerHTML = '<tr><td colspan="5" class="text-center">No documents found.</td></tr>';
+        return;
+    }
 
     const start = (currentPage - 1) * rowsPerPage;
     const end = start + rowsPerPage;
@@ -83,11 +100,26 @@ document.getElementById('nextPage').addEventListener('click', function (e) {
     }
 });
 
-// The editDocument, updateDocument, and deleteDocument functions remain unchanged.
+// Debounce search input
+let searchTimeout;
+document.getElementById('searchInput').addEventListener('input', function() {
+    clearTimeout(searchTimeout);
+    searchTimeout = setTimeout(handleSearch, 300); // 300ms debounce
+});
 
 async function editDocument(id) {
     try {
-        const response = await fetch(`http://localhost:3000/documents/${id}`);
+        const response = await fetch(`http://localhost:3000/documents/${id}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
         const documentData = await response.json();
 
         const { value: formValues } = await Swal.fire({
@@ -146,6 +178,9 @@ async function deleteDocument(id) {
     try {
         const response = await fetch(`http://localhost:3000/documents/${id}`, {
             method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+            },
         });
 
         if (response.ok) {

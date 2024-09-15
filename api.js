@@ -1,7 +1,8 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const { Pool } = require('pg'); // Import PostgreSQL driver
+const { Pool } = require('pg');
+const bcrypt = require('bcryptjs');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -18,7 +19,54 @@ const pool = new Pool({
     port: 5432 // Default PostgreSQL port
 });
 
-// GET all documents
+// USER AUTHENTICATION ROUTES
+
+// User Registration
+app.post('/register', async (req, res) => {
+    const { username, email, password } = req.body;
+
+    try {
+        const hashedPassword = await bcrypt.hash(password, 10);
+
+        const client = await pool.connect();
+        await client.query(
+            'INSERT INTO users (username, email, password) VALUES ($1, $2, $3) RETURNING *',
+            [username, email, hashedPassword]
+        );
+
+        client.release();
+        res.status(201).json({ message: "User registered successfully!" });
+    } catch (err) {
+        console.error('Error registering user:', err);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+});
+
+// User Login
+app.post('/login', async (req, res) => {
+    const { username, password } = req.body;
+
+    try {
+        const client = await pool.connect();
+        const result = await client.query('SELECT * FROM users WHERE username = $1', [username]);
+        const user = result.rows[0];
+        client.release();
+
+        if (user && await bcrypt.compare(password, user.password)) {
+            // Simple password authentication: no token or session
+            res.status(200).json({ message: 'Login successful' });
+        } else {
+            res.status(400).json({ message: 'Invalid username or password' });
+        }
+    } catch (err) {
+        console.error('Error during login:', err);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+});
+
+// DOCUMENT ROUTES
+
+// GET all documents (No authentication required)
 app.get('/documents', async (req, res) => {
     try {
         const client = await pool.connect();
@@ -32,7 +80,7 @@ app.get('/documents', async (req, res) => {
     }
 });
 
-// GET a specific document by ID
+// GET a specific document by ID (No authentication required)
 app.get('/documents/:id', async (req, res) => {
     const id = req.params.id;
     try {
@@ -51,7 +99,7 @@ app.get('/documents/:id', async (req, res) => {
     }
 });
 
-// POST new document(s)
+// POST new document(s) (No authentication required)
 app.post('/documents', async (req, res) => {
     const documents = Array.isArray(req.body) ? req.body : [req.body]; // Handle single document or array
 
@@ -80,8 +128,7 @@ app.post('/documents', async (req, res) => {
     }
 });
 
-
-// PUT update a document
+// PUT update a document (No authentication required)
 app.put('/documents/:id', async (req, res) => {
     const id = req.params.id;
     const { title, module, approval, scriptLink } = req.body;
@@ -104,7 +151,7 @@ app.put('/documents/:id', async (req, res) => {
     }
 });
 
-// DELETE a document
+// DELETE a document (No authentication required)
 app.delete('/documents/:id', async (req, res) => {
     const id = req.params.id;
     try {
@@ -121,6 +168,11 @@ app.delete('/documents/:id', async (req, res) => {
         console.error('Error deleting document:', err);
         res.status(500).json({ message: 'Internal server error' });
     }
+});
+
+// Example of a public route
+app.get('/dashboard', async (req, res) => {
+    res.json({ message: 'Welcome to the dashboard!' });
 });
 
 // Start the server

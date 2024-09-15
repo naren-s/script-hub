@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap">
+    <title>Document/Script Form</title>
+    <style>
+        /* General page styles */
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: #f8f9fa;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        /* Card styling */
+        .card {
+            border: none;
+            border-radius: 10px;
+            padding: 30px; /* Increased padding */
+            max-width: 600px; /* Increased width */
+            width: 100%;
+            box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-title {
+            font-size: 26px; /* Slightly larger title */
+            font-weight: 500;
+            color: #333;
+        }
+
+        /* Input and label styling */
+        .form-group label {
+            font-size: 16px; /* Larger label font size */
+            color: #666;
+        }
+
+        .form-control {
+            border-radius: 8px;
+            padding: 14px; /* Increased padding for larger input */
+            font-size: 16px; /* Larger font size in input fields */
+        }
+
+        .form-control:focus {
+            box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.3); /* Enhanced green shadow */
+            border-color: #28a745; /* Green border color */
+        }
+
+        /* Adjusting the select element to fix display issues */
+        select.form-control {
+            padding: 12px; /* Adjust padding for better vertical alignment */
+            font-size: 16px; /* Match input font size */
+            line-height: 1.5; /* Ensure proper height for text */
+            height: auto; /* Allow auto height based on content */
+        }
+
+        /* Button styling */
+        .btn {
+            font-size: 18px; /* Larger button font size */
+            padding: 12px 24px; /* Increased padding */
+            border-radius: 8px;
+        }
+
+        .btn-success {
+            background-color: #28a745;
+            border: none;
+        }
+
+        .btn-success:hover {
+            background-color: #218838;
+        }
+
+        /* Centering the card */
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+    </style>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                // Redirect to login page if not logged in
+                window.location.href = 'index.html';
+            }
+        });
+    </script>
+</head>
+<body>
+    <div class="container">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h2 class="card-title text-center mb-4">Submit Document/Script</h2>
+                <form id="documentForm">
+                    <div class="form-group">
+                        <label for="title">Document/Script Title</label>
+                        <input type="text" class="form-control" id="title" placeholder="Enter the title" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="module">Module</label>
+                        <input type="text" class="form-control" id="module" placeholder="Enter the module name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="approval">Approval Required</label>
+                        <select id="approval" class="form-control" required>
+                            <option value="true">Yes</option>
+                            <option value="false">No</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="scriptLink">Script Link</label>
+                        <input type="url" class="form-control" id="scriptLink" placeholder="Enter the script link" required>
+                    </div>
+                    <div class="d-flex justify-content-center">
+                        <button type="button" class="btn btn-success" onclick="submitForm()">Submit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="script.js"></script>
+</body>
+</html>
