@@ -2,7 +2,6 @@ async function login() {
     const username = document.getElementById('username').value.trim();
     const password = document.getElementById('password').value.trim();
 
-    // Validate inputs
     if (!username || !password) {
         Swal.fire({
             icon: 'error',
@@ -25,6 +24,8 @@ async function login() {
         const data = await response.json();
         if (response.ok) {
             localStorage.setItem('token', data.token);
+
+            // Prevent going back to login after successful login
             Swal.fire({
                 icon: 'success',
                 title: 'Login Successful',
@@ -32,7 +33,7 @@ async function login() {
                 showConfirmButton: false,
                 timer: 2000
             }).then(() => {
-                window.location.href = 'display.html';
+                window.location.replace('display.html'); // Use replace to avoid adding to history stack
             });
         } else {
             Swal.fire({
@@ -52,12 +53,12 @@ async function login() {
     }
 }
 
+
 async function signup() {
     const username = document.getElementById('username').value.trim();
     const email = document.getElementById('email').value.trim();
     const password = document.getElementById('password').value.trim();
 
-    // Validate inputs
     if (!username || !email || !password) {
         Swal.fire({
             icon: 'error',
@@ -86,7 +87,7 @@ async function signup() {
                 confirmButtonText: 'OK'
             }).then(() => {
                 document.getElementById('signupForm').reset();
-                window.location.href = 'index.html';
+                window.location.replace('index.html'); // Use replace to avoid adding to history stack
             });
         } else {
             Swal.fire({

@@ -6,6 +6,20 @@
     <title>Sign Up</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap">
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+        const token = localStorage.getItem('token');
+        if (token) {
+                window.location.href = 'display.html';
+            }
+
+        // Prevent forward navigation to prevent the user from going forward to the display page from signup
+        window.history.pushState(null, '', window.location.href);
+        window.addEventListener('popstate', function() {
+        window.history.pushState(null, '', window.location.href);
+            });
+        });
+    </script>
     <style>
         body {
             background-color: #f8f9fa;
